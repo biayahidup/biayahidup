@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Kalkulator biaya hidup di Indonesia berdasarkan kota, gaya hidup, dan status keluarga.">
+  <title>BiayaHidup.ID – Kalkulator Biaya Hidup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(145deg, #c3f0ff, #ffffff);
+      color: #333;
+    }
+    header {
+      background: #00aaff;
+      padding: 1.2rem;
+      text-align: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 1rem 0;
+    }
+    nav button {
+      background-color: #00aaff;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #00aaff;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1rem;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .radio-group {
+      margin: 0.5rem 0;
+    }
+    .radio-group label {
+      margin-right: 10px;
+    }
+    button.primary {
+      background-color: #00aaff;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .result {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #007040;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #777;
+      padding: 1.5rem;
+    }
+    .share-btn {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      margin-top: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .faq {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #f5f5f5;
+      border-radius: 10px;
+    }
+    .faq h3 {
+      color: #00aaff;
+    }
+  </style>
+</head>
+<body>
+
+  <header>BiayaHidup.ID</header>
+  <nav>
+    <button onclick="showTab('kalkulator')">Kalkulator</button>
+    <button onclick="showTab('faq')">FAQ</button>
+  </nav>
+
+  <section class="container tab-content active" id="kalkulator">
+    <h2>Kalkulator Biaya Hidup</h2>
+    <label for="kota">Pilih Kota:</label>
+    <select id="kota">
+      <option value="jakarta">Jakarta</option>
+      <option value="bandung">Bandung</option>
+      <option value="surabaya">Surabaya</option>
+    </select>
+
+    <label>Gaya Hidup:</label>
+    <div class="radio-group">
+      <label><input type="radio" name="gaya" value="hemat" checked> Hemat</label>
+      <label><input type="radio" name="gaya" value="sedang"> Sedang</label>
+      <label><input type="radio" name="gaya" value="mewah"> Mewah</label>
+    </div>
+
+    <label>Status:</label>
+    <div class="radio-group">
+      <label><input type="radio" name="status" value="lajang" checked> Lajang</label>
+      <label><input type="radio" name="status" value="menikah"> Menikah</label>
+      <label><input type="radio" name="status" value="keluarga"> Punya Anak</label>
+    </div>
+
+    <button class="primary" onclick="hitung()">Hitung</button>
+    <div class="result" id="hasil"></div>
+  </section>
+
+  <section class="container tab-content" id="faq">
+    <h2>FAQ</h2>
+    <div class="faq">
+      <h3>Apa itu BiayaHidup.ID?</h3>
+      <p>Situs ini membantu kamu memperkirakan biaya hidup bulanan berdasarkan kota dan gaya hidup di Indonesia.</p>
+
+      <h3>Apakah datanya akurat?</h3>
+      <p>Data dikumpulkan dari berbagai sumber dan disesuaikan dengan kondisi umum di lapangan.</p>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 BiayaHidup.ID – Semua Hak Dilindungi
+  </footer>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function hitung() {
+      const kota = document.getElementById("kota").value;
+      const gaya = document.querySelector("input[name='gaya']:checked").value;
+      const status = document.querySelector("input[name='status']:checked").value;
+
+      let biaya = 0;
+      const base = {
+        jakarta: 5000000,
+        bandung: 4000000,
+        surabaya: 4500000
+      }[kota];
+
+      const gayaFactor = {
+        hemat: 0.9,
+        sedang: 1,
+        mewah: 1.5
+      }[gaya];
+
+      const statusFactor = {
+        lajang: 1,
+        menikah: 1.8,
+        keluarga: 2.5
+      }[status];
+
+      biaya = base * gayaFactor * statusFactor;
+
+      document.getElementById("hasil").innerText = "Perkiraan biaya hidup: Rp " + biaya.toLocaleString("id-ID");
+    }
+  </script>
+
+</body>
+</html>
