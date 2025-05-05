@@ -2,43 +2,205 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Hitung estimasi biaya hidup di Indonesia dengan mudah.">
-  <title>Kalkulator Biaya Hidup</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Kalkulator biaya hidup di Indonesia berdasarkan kota, gaya hidup, dan status keluarga.">
+  <title>BiayaHidup.ID – Kalkulator Biaya Hidup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(145deg, #c3f0ff, #ffffff);
+      color: #333;
+    }
+    header {
+      background: #00aaff;
+      padding: 1.2rem;
+      text-align: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 1rem 0;
+    }
+    nav button {
+      background-color: #00aaff;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #00aaff;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1rem;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .radio-group {
+      margin: 0.5rem 0;
+    }
+    .radio-group label {
+      margin-right: 10px;
+    }
+    button.primary {
+      background-color: #00aaff;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      margin-top: 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .result {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #007040;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #777;
+      padding: 1.5rem;
+    }
+  </style>
 </head>
-<body class="bg-light">
-  <div class="container py-5">
-    <h1 class="text-center mb-4">Kalkulator Biaya Hidup</h1>
-    <form id="biayaForm" class="card p-4 shadow-sm">
-      <div class="mb-3">
-        <label for="makan" class="form-label">Biaya Makan per Bulan (Rp)</label>
-        <input type="number" id="makan" class="form-control" required>
+<body>
+
+  <header>BiayaHidup.ID</header>
+
+  <nav>
+    <button onclick="showTab('otomatis')">Kalkulator Otomatis</button>
+    <button onclick="showTab('manual')">Kalkulator Manual</button>
+  </nav>
+
+  <!-- Kalkulator Otomatis -->
+  <div id="otomatis" class="tab-content active">
+    <div class="container">
+      <h2>Kalkulator Otomatis</h2>
+
+      <label for="kota">Pilih Kota:</label>
+      <select id="kota">
+        <option value="jakarta">Jakarta</option>
+        <option value="bandung">Bandung</option>
+        <option value="surabaya">Surabaya</option>
+      </select>
+
+      <label>Gaya Hidup:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="gaya" value="hemat" checked> Hemat</label>
+        <label><input type="radio" name="gaya" value="standar"> Standar</label>
+        <label><input type="radio" name="gaya" value="nyaman"> Nyaman</label>
       </div>
-      <div class="mb-3">
-        <label for="transportasi" class="form-label">Biaya Transportasi per Bulan (Rp)</label>
-        <input type="number" id="transportasi" class="form-control" required>
+
+      <label>Status:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="status" value="sendiri" checked> Sendiri</label>
+        <label><input type="radio" name="status" value="berdua"> Berdua</label>
+        <label><input type="radio" name="status" value="keluarga"> Keluarga</label>
       </div>
-      <div class="mb-3">
-        <label for="sewa" class="form-label">Biaya Sewa Tempat Tinggal per Bulan (Rp)</label>
-        <input type="number" id="sewa" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Hitung Total</button>
-    </form>
-    <div id="hasil" class="alert alert-info mt-4 d-none"></div>
+
+      <button class="primary" onclick="hitungOtomatis()">Hitung</button>
+
+      <div class="result" id="hasilOtomatis"></div>
+    </div>
   </div>
 
+  <!-- Kalkulator Manual -->
+  <div id="manual" class="tab-content">
+    <div class="container">
+      <h2>Kalkulator Manual</h2>
+
+      <label>Makan per bulan (Rp):</label>
+      <input type="number" id="makan" />
+
+      <label>Transportasi per bulan (Rp):</label>
+      <input type="number" id="transport" />
+
+      <label>Sewa tempat tinggal per bulan (Rp):</label>
+      <input type="number" id="sewa" />
+
+      <button class="primary" onclick="hitungManual()">Hitung</button>
+
+      <div class="result" id="hasilManual"></div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 BiayaHidup.ID – Semua Hak Dilindungi
+  </footer>
+
   <script>
-    document.getElementById('biayaForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const makan = parseInt(document.getElementById('makan').value) || 0;
-      const transportasi = parseInt(document.getElementById('transportasi').value) || 0;
-      const sewa = parseInt(document.getElementById('sewa').value) || 0;
-      const total = makan + transportasi + sewa;
-      const hasil = document.getElementById('hasil');
-      hasil.textContent = `Total Biaya Hidup per Bulan: Rp ${total.toLocaleString('id-ID')}`;
-      hasil.classList.remove('d-none');
-    });
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    const biayaDasar = {
+      jakarta: { hemat: 3000000, standar: 5000000, nyaman: 8000000 },
+      bandung: { hemat: 2500000, standar: 4000000, nyaman: 7000000 },
+      surabaya: { hemat: 2700000, standar: 4200000, nyaman: 7500000 }
+    };
+
+    function hitungOtomatis() {
+      const kota = document.getElementById('kota').value;
+      const gaya = document.querySelector('input[name="gaya"]:checked').value;
+      const status = document.querySelector('input[name="status"]:checked').value;
+
+      let total = biayaDasar[kota][gaya];
+
+      if (status === "berdua") total *= 1.5;
+      else if (status === "keluarga") total *= 2;
+
+      document.getElementById("hasilOtomatis").innerText =
+        "Estimasi Biaya Hidup: Rp " + total.toLocaleString("id-ID");
+    }
+
+    function hitungManual() {
+      const makan = parseInt(document.getElementById("makan").value) || 0;
+      const transport = parseInt(document.getElementById("transport").value) || 0;
+      const sewa = parseInt(document.getElementById("sewa").value) || 0;
+
+      const total = makan + transport + sewa;
+
+      document.getElementById("hasilManual").innerText =
+        "Total Biaya Hidup: Rp " + total.toLocaleString("id-ID");
+    }
   </script>
 </body>
 </html>
